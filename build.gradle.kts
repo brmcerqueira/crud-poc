@@ -13,7 +13,6 @@ plugins {
     kotlin("kapt") version "1.4.0"
     kotlin("plugin.serialization") version "1.4.0"
     id("com.github.johnrengelman.shadow") version "4.0.3"
-    id("com.palantir.docker") version "0.22.1"
 }
 
 repositories {
@@ -49,11 +48,3 @@ dependencies {
 tasks.withType<ShadowJar> {
     archiveClassifier.set("fat")
 }
-
-docker {
-    name = "my/crud-poc:$version"
-    files(tasks["shadowJar"].outputs)
-    noCache(true)
-}
-
-tasks["docker"].dependsOn(tasks["shadowJar"])
