@@ -7,5 +7,5 @@ import org.jetbrains.exposed.sql.Database
 @Module
 class PersistenceModule {
     @Provides
-    fun provideDatabase(): Database = Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+    fun provideDatabase(): Database = Database.connect("jdbc:postgresql://localhost:5432/crud-poc?user=admin&password=admin", driver = "org.postgresql.Driver")
 }

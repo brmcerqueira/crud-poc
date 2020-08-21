@@ -12,4 +12,9 @@ class UserController @Inject constructor(private val call: ApplicationCall, priv
         service.create(call.receive())
         call.respond(HttpStatusCode.OK)
     }
+
+    suspend fun update() {
+        service.update(call.parameters["id"]!!.toLong(), call.receive())
+        call.respond(HttpStatusCode.OK)
+    }
 }

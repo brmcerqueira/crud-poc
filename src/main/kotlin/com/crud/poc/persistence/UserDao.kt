@@ -17,9 +17,12 @@ class UserDao @Inject constructor(private val database: Database) {
 
     fun update(entity: User) {
         transaction(database) {
-            Users.update {
-                it[name] = entity.name
-            }
+            Users.update(where = {
+                    Users.id.eq(entity.id)
+                },
+                body = {
+                    it[name] = entity.name
+                })
         }
     }
 }

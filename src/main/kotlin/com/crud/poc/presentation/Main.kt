@@ -26,6 +26,7 @@ fun main() {
         }
         routing {
             post("/user", go { userController::create })
+            put("/user/{id}", go { userController::update })
         }
     }
 

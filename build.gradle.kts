@@ -36,6 +36,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api("com.google.dagger:dagger:2.28.3")
     kapt("com.google.dagger:dagger-compiler:2.28.3")
+    implementation("org.postgresql:postgresql:42.2.15")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-serialization:$ktorVersion")
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
