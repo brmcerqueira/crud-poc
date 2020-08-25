@@ -1,10 +1,12 @@
 package com.crud.poc.presentation
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import com.crud.poc.presentation.Injector.go
 import com.crud.poc.presentation.Injector.presentationComponent
-import com.typesafe.config.ConfigFactory
 import io.ktor.application.*
-import io.ktor.config.*
+import io.ktor.auth.*
+import io.ktor.auth.jwt.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.routing.*
@@ -30,6 +32,20 @@ fun main() {
                         }
                 )
             }
+
+            install(Authentication) {
+                jwt {
+                    realm = presentationComponent.config.jwt.realm
+                    verifier(JWT.require(Algorithm.HMAC256(presentationComponent.config.jwt.secret))
+                        .withAudience(presentationComponent.config.jwt.audience)
+                        .withIssuer(presentationComponent.config.jwt.issuer)
+                        .build())
+                    validate {
+                        presentationComponent.jwtService.validate(it)
+                    }
+                }
+            }
+
             routing {
                 post("/user", go { userController::create })
                 put("/user/{id}", go { userController::update })

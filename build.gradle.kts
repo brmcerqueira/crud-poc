@@ -6,6 +6,7 @@ version = "1.0"
 
 val ktorVersion = "1.4.0"
 val exposedVersion = "0.26.2"
+val daggerVersion = "2.28.3"
 
 plugins {
     application
@@ -34,11 +35,12 @@ application {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    api("com.google.dagger:dagger:2.28.3")
-    kapt("com.google.dagger:dagger-compiler:2.28.3")
+    api("com.google.dagger:dagger:$daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
     implementation("org.postgresql:postgresql:42.2.15")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-serialization:$ktorVersion")
+    implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")

@@ -1,6 +1,7 @@
 package com.crud.poc.presentation
 
-import com.crud.poc.dto.ConfigDto
+import com.crud.poc.business.JwtService
+import com.crud.poc.dto.config.ConfigDto
 import dagger.Component
 import javax.inject.Singleton
 
@@ -8,5 +9,6 @@ import javax.inject.Singleton
 @Component(modules = [(PresentationModule::class)])
 interface PresentationComponent {
     val config: ConfigDto
+    val jwtService: JwtService
     fun requestComponent(module: RequestModule): RequestComponent
 }

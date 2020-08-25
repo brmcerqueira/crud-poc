@@ -1,6 +1,6 @@
 package com.crud.poc.persistence
 
-import com.crud.poc.dto.ConfigDto
+import com.crud.poc.dto.config.ConfigDto
 import dagger.Module
 import dagger.Provides
 import org.jetbrains.exposed.sql.Database

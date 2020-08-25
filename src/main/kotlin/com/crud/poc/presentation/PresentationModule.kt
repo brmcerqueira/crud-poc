@@ -1,6 +1,7 @@
 package com.crud.poc.presentation
 
-import com.crud.poc.dto.ConfigDto
+import com.crud.poc.dto.config.ConfigDto
+import com.crud.poc.dto.config.JwtDto
 import com.typesafe.config.ConfigFactory
 import dagger.Module
 import dagger.Provides
@@ -17,7 +18,13 @@ class PresentationModule {
         val applicationConfig = HoconApplicationConfig(ConfigFactory.load())
         return ConfigDto(
             port = applicationConfig.property("port").getString().toInt(),
-            connectionString = applicationConfig.property("connectionString").getString()
+            connectionString = applicationConfig.property("connectionString").getString(),
+            jwt = JwtDto(
+                issuer = applicationConfig.property("jwt.issuer").getString(),
+                audience = applicationConfig.property("jwt.audience").getString(),
+                realm = applicationConfig.property("jwt.realm").getString(),
+                secret = applicationConfig.property("jwt.secret").getString()
+            )
         )
     }
 }
