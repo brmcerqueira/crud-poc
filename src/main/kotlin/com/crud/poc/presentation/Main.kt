@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.crud.poc.presentation.Injector.go
 import com.crud.poc.presentation.Injector.presentationComponent
+import com.crud.poc.presentation.Injector.requestComponent
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.auth.jwt.*
@@ -41,14 +42,16 @@ fun main() {
                         .withIssuer(presentationComponent.config.jwt.issuer)
                         .build())
                     validate {
-                        presentationComponent.jwtService.validate(it)
+                        requestComponent().jwtService.validate(it)
                     }
                 }
             }
 
             routing {
                 post("/user", go { userController::create })
-                put("/user/{id}", go { userController::update })
+                authenticate {
+                    put("/user/{id}", go { userController::update })
+                }
             }
         }
 

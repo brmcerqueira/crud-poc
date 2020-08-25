@@ -9,6 +9,5 @@ import javax.inject.Singleton
 @Component(modules = [(PresentationModule::class)])
 interface PresentationComponent {
     val config: ConfigDto
-    val jwtService: JwtService
     fun requestComponent(module: RequestModule): RequestComponent
 }
