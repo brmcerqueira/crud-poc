@@ -1,5 +1,6 @@
 package com.crud.poc.presentation
 
+import com.crud.poc.domain.Permission
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.auth.jwt.*
@@ -10,8 +11,8 @@ import io.ktor.util.pipeline.*
 object Injector {
     val presentationComponent: PresentationComponent = DaggerPresentationComponent.builder().build()
 
-    private fun ApplicationCall.requestComponent(): RequestComponent = attributes.computeIfAbsent(AttributeKey("requestComponentKey")) {
-        presentationComponent.requestComponent(RequestModule(this))
+    private fun ApplicationCall.requestComponent(permissions: List<Permission> = listOf()): RequestComponent = attributes.computeIfAbsent(AttributeKey("requestComponentKey")) {
+        presentationComponent.requestComponent(RequestModule(this, permissions))
     }
 
     fun JWTAuthenticationProvider.Configuration.validateJwt() {
@@ -20,12 +21,12 @@ object Injector {
         }
     }
 
-    fun Route.allow(build: Route.() -> Unit): Route {
+    fun Route.allow(vararg permissions: Permission, build: Route.() -> Unit): Route {
         val configurationNames = listOf<String?>(null)
         val authenticatedRoute = createChild(AuthenticationRouteSelector(configurationNames))
-        /*authenticatedRoute.intercept(Authentication.AuthenticatePhase) {
-
-        }*/
+        authenticatedRoute.intercept(ApplicationCallPipeline.Setup) {
+            call.requestComponent(permissions.asList())
+        }
         application.feature(Authentication).interceptPipeline(authenticatedRoute, configurationNames, optional = false)
         authenticatedRoute.build()
         return authenticatedRoute

@@ -2,6 +2,7 @@ package com.crud.poc.presentation
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.crud.poc.domain.Permission
 import com.crud.poc.presentation.Injector.allow
 import com.crud.poc.presentation.Injector.go
 import com.crud.poc.presentation.Injector.presentationComponent
@@ -48,7 +49,7 @@ fun main() {
 
             routing {
                 post("/user", go { userController::create })
-                allow {
+                allow(Permission.UpdateUser) {
                     put("/user/{id}", go { userController::update })
                 }
             }
