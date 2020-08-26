@@ -15,9 +15,10 @@ import java.util.Date
 object Injector {
     val presentationComponent: PresentationComponent = DaggerPresentationComponent.builder().build()
     private val algorithm = Algorithm.HMAC256(presentationComponent.config.jwt.secret)
+    private val permissionsKey = AttributeKey<List<Permission>>("permissionsKey")
 
-    private fun ApplicationCall.requestComponent(permissions: List<Permission> = listOf()): RequestComponent = attributes.computeIfAbsent(AttributeKey("requestComponentKey")) {
-        presentationComponent.requestComponent(RequestModule(this, permissions))
+    private fun ApplicationCall.requestComponent(): RequestComponent = attributes.computeIfAbsent(AttributeKey("requestComponentKey")) {
+        presentationComponent.requestComponent(RequestModule(this))
     }
 
     fun Authentication.Configuration.setupJwt() {
@@ -28,16 +29,17 @@ object Injector {
                     .withIssuer(presentationComponent.config.jwt.issuer)
                     .build())
             validate {
-                requestComponent().jwtService.validate(it)
+                requestComponent().jwtService.validate(it, attributes[permissionsKey])
             }
         }
     }
 
     fun buildToken(user: User, permissions: List<Permission>): String = JWT.create()
             .withSubject(presentationComponent.config.jwt.subject)
+            .withAudience(presentationComponent.config.jwt.audience)
             .withIssuer(presentationComponent.config.jwt.issuer)
             .withClaim("id", user.id)
-            .withArrayClaim("permissions", permissions.map { it.ordinal }.toTypedArray())
+            .withArrayClaim("permissions", permissions.map { it.name }.toTypedArray())
             //10 horas
             .withExpiresAt(Date(System.currentTimeMillis() + 36_000_00 * 10))
             .sign(algorithm)
@@ -46,7 +48,7 @@ object Injector {
         val configurationNames = listOf<String?>(null)
         val authenticatedRoute = createChild(AuthenticationRouteSelector(configurationNames))
         authenticatedRoute.intercept(ApplicationCallPipeline.Setup) {
-            call.requestComponent(permissions.asList())
+            call.attributes.put(permissionsKey, permissions.asList())
         }
         application.feature(Authentication).interceptPipeline(authenticatedRoute, configurationNames, optional = false)
         authenticatedRoute.build()
