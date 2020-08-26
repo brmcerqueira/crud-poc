@@ -23,6 +23,7 @@ class PresentationModule {
                 issuer = applicationConfig.property("jwt.issuer").getString(),
                 audience = applicationConfig.property("jwt.audience").getString(),
                 realm = applicationConfig.property("jwt.realm").getString(),
+                subject = applicationConfig.property("jwt.subject").getString(),
                 secret = applicationConfig.property("jwt.secret").getString()
             )
         )

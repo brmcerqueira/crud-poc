@@ -4,6 +4,7 @@ import com.crud.poc.domain.User
 import com.crud.poc.persistence.table.Users
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import javax.inject.Inject
@@ -24,5 +25,16 @@ class UserDao @Inject constructor(private val database: Database) {
                     it[name] = entity.name
                 })
         }
+    }
+
+    fun getByEmail(email: String): User = transaction(database) {
+        val row = Users.select {
+            Users.email eq email
+        }.first()
+        User(
+            id = row[Users.id].value,
+            name = row[Users.name],
+            email = row[Users.email]
+        )
     }
 }

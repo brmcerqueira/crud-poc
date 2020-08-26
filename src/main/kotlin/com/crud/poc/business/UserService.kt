@@ -9,14 +9,16 @@ class UserService @Inject constructor(private val dao: UserDao) {
     fun create(dto: UserSaveDto) {
         dao.create(User(
             id = null,
-            name = dto.name
+            name = dto.name,
+            email = dto.email,
         ))
     }
 
     fun update(id: Long, dto: UserSaveDto) {
         dao.update(User(
             id = id,
-            name = dto.name
+            name = dto.name,
+            email = dto.email
         ))
     }
 }

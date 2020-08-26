@@ -1,15 +1,12 @@
 package com.crud.poc.presentation
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
 import com.crud.poc.domain.Permission
 import com.crud.poc.presentation.Injector.allow
 import com.crud.poc.presentation.Injector.go
 import com.crud.poc.presentation.Injector.presentationComponent
-import com.crud.poc.presentation.Injector.validateJwt
+import com.crud.poc.presentation.Injector.setupJwt
 import io.ktor.application.*
 import io.ktor.auth.*
-import io.ktor.auth.jwt.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.routing.*
@@ -37,17 +34,11 @@ fun main() {
             }
 
             install(Authentication) {
-                jwt {
-                    realm = presentationComponent.config.jwt.realm
-                    verifier(JWT.require(Algorithm.HMAC256(presentationComponent.config.jwt.secret))
-                            .withAudience(presentationComponent.config.jwt.audience)
-                            .withIssuer(presentationComponent.config.jwt.issuer)
-                            .build())
-                    validateJwt()
-                }
+                setupJwt()
             }
 
             routing {
+                post("/signIn", go { jwtController::signIn })
                 post("/user", go { userController::create })
                 allow(Permission.UpdateUser) {
                     put("/user/{id}", go { userController::update })
