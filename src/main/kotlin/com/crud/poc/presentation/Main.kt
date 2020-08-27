@@ -15,11 +15,16 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
+import org.slf4j.event.Level
 
 @KtorExperimentalAPI
 fun main() {
     embeddedServer(Netty, applicationEngineEnvironment {
         module {
+            install(CallLogging) {
+                level = Level.INFO
+            }
+
             install(ContentNegotiation) {
                 json(contentType = ContentType.Application.Json,
                         json = Json {

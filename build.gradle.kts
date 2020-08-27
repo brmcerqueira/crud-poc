@@ -19,7 +19,6 @@ plugins {
 repositories {
     mavenCentral()
     jcenter()
-    maven("https://kotlin.bintray.com/kotlinx/")
 }
 
 java {
@@ -43,7 +42,6 @@ dependencies {
     implementation("io.ktor:ktor-serialization:$ktorVersion")
     implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("ch.qos.logback:logback-classic:1.2.3")
     testImplementation(group = "junit", name = "junit", version = "4.12")
