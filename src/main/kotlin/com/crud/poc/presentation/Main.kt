@@ -45,6 +45,7 @@ fun main() {
             routing {
                 post("/signIn", go { jwtController::signIn })
                 post("/user", go { userController::create })
+                get("/geocode", go { geocodeController::geocodeToAddress })
                 allow(Permission.UpdateUser) {
                     put("/user/{id}", go { userController::update })
                 }

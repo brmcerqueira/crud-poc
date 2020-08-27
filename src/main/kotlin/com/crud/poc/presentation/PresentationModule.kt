@@ -7,15 +7,18 @@ import dagger.Module
 import dagger.Provides
 import io.ktor.config.*
 import io.ktor.util.*
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 class PresentationModule {
     @KtorExperimentalAPI
+    private val applicationConfig = HoconApplicationConfig(ConfigFactory.load())
+
+    @KtorExperimentalAPI
     @Singleton
     @Provides
     fun provideConfigDto(): ConfigDto {
-        val applicationConfig = HoconApplicationConfig(ConfigFactory.load())
         return ConfigDto(
             port = applicationConfig.property("port").getString().toInt(),
             connectionString = applicationConfig.property("connectionString").getString(),
@@ -28,4 +31,10 @@ class PresentationModule {
             )
         )
     }
+
+    @KtorExperimentalAPI
+    @Singleton
+    @Provides
+    @Named("consume")
+    fun provideConsumeConfig(): ApplicationConfig = applicationConfig.config("consume")
 }
